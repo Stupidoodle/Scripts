@@ -6,6 +6,7 @@ float sim_time;
 float delta;
 float percent;
 convar::ConVar@ cmd_ticks = null; 
+Slider@ fakelag = find_slider("AntiAim", "AntiAims", "Fake Lag", "Fake Lag");
 int tick;
 
 bool fake_create_move(UserCmd &inout cmd, bool&out sendpacket){
@@ -20,8 +21,8 @@ bool fake_create_move(UserCmd &inout cmd, bool&out sendpacket){
     local_player.read_prop("DT_CSPlayer", "m_flLowerBodyYawTarget", lby);
     local_player.read_prop("DT_CSPlayer", "m_flSimulationTime", sim_time);
     delta = g_GlobalVars.curtime - sim_time;
-    float choke = delta / g_GlobalVars.interval_per_tick;
-    percent = 100 / tick * choke;
+    int choke = 0.5f + delta / g_GlobalVars.interval_per_tick;
+    percent = choke;
     float lby_delta = abs(floor(abs(floor(lby)) - abs(floor(real))));
     string str_delta = lby_delta;
     if(lby_delta >= 36.f){
@@ -48,8 +49,11 @@ void fake_draw(){
     draw_text(Vector2((screen.x - screen.x) + 5, screen.y - 105), Vector2(), "Verdana", "FAKELAG", red_green, 5, 1.f);
     Vector3 origin = local_player.origin;
     Vector2 w2s1 = world_to_screen(origin);
-    Vector2 to(w2s1.x + percent, w2s1.y + 5);
+    string test = percent;
+    log_info(test);
+    Vector2 to(w2s1.x + percent*5, w2s1.y + 5);
     draw_filled_rect(w2s1, to, Color(255, 255, 255, 255));
+    draw_rect(w2s1, Vector2(w2s1.x + fakelag.value()*5, w2s1.y +6), Color(25, 25, 25, 255));
     //draw_text(Vector2((screen.x - screen.x) + 5, screen.y - 105), Vector2(), "Verdana", "LBY", c_lby, 5, 1.f);
 }
 
