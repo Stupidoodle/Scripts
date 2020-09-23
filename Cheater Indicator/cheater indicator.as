@@ -45,7 +45,7 @@ bool shutdown() {
 
 bool initialize() {
 
-    @check_cheater = add_checkbox("Misc", "Misc", "Scripts - Cheater ESP", "Cheater ESP");
+    @check_cheater = add_checkbox("Misc", "General", "Scripts - Cheater ESP", "Cheater ESP");
 
     if(check_cheater is null)
     return false;
